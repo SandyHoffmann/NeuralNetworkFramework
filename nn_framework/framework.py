@@ -12,6 +12,8 @@
     
 """
 
+import numpy as np
+
 class ANN():
     def __init__(self, model = None, range_values = [0, 1]):
         self.layer = model
@@ -22,16 +24,37 @@ class ANN():
         for i in range(self.n_train):
             print("train")
             image = next(training_set()).ravel()
-            print(self.normalize(image))
-
+            image = self.normalize(image)
+            y = self.forward_prop(image)
+            print(y)
         pass
 
     def evaluate(self, evaluation_set):
         for i in range(self.n_eval):
             print("evaluate")
             image = next(evaluation_set()).ravel()
-            print(self.normalize(image))
+            image = self.normalize(image)
+            y = self.forward_prop(image)
+            print(y)
         pass
+
+    """
+    Perform forward propagation on the input x through the neural network layers and return the output.
+    
+    Parameters:
+    - self: the neural network object
+    - x: the input data for forward propagation
+    
+    Returns:
+    - y.ravel(): the output of the forward propagation
+    """
+    def forward_prop(self, x):
+        # Add to two dimensional array
+        # before: [1,2,3] => after: [[1,2,3]]
+        y = x.ravel()[np.newaxis,:]
+        for layer in self.layer:
+            y = layer.forward_prop(y)
+        return y.ravel()
 
     """
     Normalize the given value using the range values of the object.
